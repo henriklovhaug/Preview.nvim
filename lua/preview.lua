@@ -8,25 +8,30 @@ local function install()
 	if vim.fn.executable("curl") == 0 then
 		err("curl is required to install this plugin")
 	end
+
+	local version = "0.7.0"
+
+	local install_script = "curl --proto '=https' --tlsv1.2 -LsSf https://github.com/henriklovhaug/md-tui/releases/download/v"
+		.. version
+		.. "/md-tui-installer.sh | sh"
+	vim.fn.system(install_script)
 end
 
 local function set_cmd()
-	vim.api.nvim_create_user_command("Preview", function(opts)
-		print("Preview", opts)
+	vim.api.nvim_create_user_command("Preview", function()
 		M.execute()
 	end, { complete = "file", nargs = "?", bang = true })
 end
 
 local function open_window(file)
-	local width = math.floor(vim.o.columns / 2)
+	local width = math.floor(vim.o.columns / 2) - 2
 	vim.env.MDT_WIDTH = width
 
-	vim.cmd.vsplit()
-	vim.cmd.terminal()
+	vim.cmd.vnew()
+	vim.fn.termopen("mdt " .. file)
+
 	vim.cmd("setlocal nonumber norelativenumber")
-	vim.api.nvim_chan_send(vim.bo.channel, "mdt " .. file .. "\r")
 	vim.api.nvim_feedkeys("a", "t", false)
-	err("Opening Preview " .. width .. " with file " .. file)
 end
 
 function M.execute()
@@ -35,7 +40,11 @@ function M.execute()
 end
 
 function M.setup()
-	print("Setup Preview")
+	-- Check if "mdt" is installed
+	if vim.fn.executable("mdt") == 0 then
+		install()
+	end
+
 	set_cmd()
 end
 
