@@ -26,4 +26,4 @@ Lazy
 
 ## Usage
 
-With a markdown file open run `Preview`
+With a markdown file open run `Preview` with optionally the filename afterwards.

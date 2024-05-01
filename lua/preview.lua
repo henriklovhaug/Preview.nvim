@@ -18,8 +18,8 @@ local function install()
 end
 
 local function set_cmd()
-	vim.api.nvim_create_user_command("Preview", function()
-		M.execute()
+	vim.api.nvim_create_user_command("Preview", function(opts)
+		M.execute(opts)
 	end, { complete = "file", nargs = "?", bang = true })
 end
 
@@ -34,8 +34,15 @@ local function open_window(file)
 	vim.api.nvim_feedkeys("a", "t", false)
 end
 
-function M.execute()
-	local file = vim.fn.expand("%:p")
+function M.execute(opts)
+	local file
+
+	if opts.fargs[1] == nil then
+		file = vim.fn.expand("%:p")
+	else
+		file = opts.fargs[1]
+	end
+
 	open_window(file)
 end
 
