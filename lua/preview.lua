@@ -9,7 +9,7 @@ local function install()
 		err("curl is required to install this plugin")
 	end
 
-	local version = "0.7.2"
+	local version = "0.8.0"
 
 	local install_script = "curl --proto '=https' --tlsv1.2 -LsSf https://github.com/henriklovhaug/md-tui/releases/download/v"
 		.. version
